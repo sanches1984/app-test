@@ -10,16 +10,12 @@ RUN go install -v ./cmd/harmony && \
 
 FROM alpine
 RUN apk update && \
-    adduser -D -H -h /app harmony && \
-    mkdir -p /app/config  && \
-    chown -R harmony:harmony /app
+    mkdir /app
 
-USER harmony
-
-COPY --chown=harmony --from=builder /app/bin/harmony /app
+COPY --from=builder /app/bin/harmony /app
 
 WORKDIR /app
 
-CMD ['/app/harmony']
-
 EXPOSE 8080
+
+CMD /app/harmony
