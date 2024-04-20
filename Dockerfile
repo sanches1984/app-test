@@ -21,3 +21,5 @@ COPY --chown=harmony --from=builder /app/bin/harmony /app
 WORKDIR /app
 
 CMD /harmony
+
+EXPOSE 80
