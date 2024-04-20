@@ -22,4 +22,4 @@ WORKDIR /app
 
 CMD /harmony
 
-EXPOSE 80
+EXPOSE 8080
