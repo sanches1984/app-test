@@ -5,7 +5,7 @@ steps:
 # Docker Build Image
   - name: gcr.io/cloud-builders/docker
     id  : BUILD
-    args: ['build', '-t', '$_SERVICE_IMAGE', '.', '-f', 'Dockerfile', '--network=cloudbuild']
+    args: ['build', '-t', '$_SERVICE_IMAGE', '.', '-f', 'Dockerfile']
 
 # Docker Push Image to Artifact Registry
   - name: gcr.io/cloud-builders/docker
@@ -20,7 +20,6 @@ steps:
       - services
       - update
       - $_SERVICE_NAME
-      - --project=$_SERVICE_PROJECT
       - --region=$_SERVICE_REGION
       - --image=$_SERVICE_IMAGE
 
@@ -28,7 +27,7 @@ images: # Display the image in the build results - Build Artifacts
 - $_SERVICE_IMAGE
 
 substitutions:
-    _SERVICE_IMAGE    : europe-west9-docker.pkg.dev/${PROJECT_ID}/${_DOCKER_REGISTRY}/${_DOCKER_IMAGENAME}:${SHORT_SHA}
+    _SERVICE_IMAGE    : gcr.io/${PROJECT_ID}/tg-bot-docker:${COMMIT_SHA}
     _SERVICE_REGION   : europe-west9
     _SERVICE_PROJECT  : tg-bot-dev
     _SERVICE_NAME     : tb-bot-docker
