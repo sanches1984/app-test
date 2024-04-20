@@ -20,6 +20,6 @@ COPY --chown=harmony --from=builder /app/bin/harmony /app
 
 WORKDIR /app
 
-CMD /harmony
+CMD ['/app/harmony']
 
 EXPOSE 8080
