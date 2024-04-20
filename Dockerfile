@@ -1,10 +1,23 @@
-FROM ubuntu:21.04
+FROM golang:alpine as builder
+RUN apk update && \
+    mkdir /app
+ADD . /app/
+WORKDIR /app
+COPY ./ ./
 
-RUN apt-get -y update
-RUN apt-get -y install apache2
+RUN go install -v ./cmd/harmony && \
+    go build -o ./bin/harmony ./cmd/harmony/main.go
 
-RUN echo 'Docker Image on CloudRun!<br>'   > /var/www/html/index.html
-RUN echo '<b><font color="magenta">Version 1.0</font></b>' >> /var/www/html/index.html
+FROM alpine
+RUN apk update && \
+    adduser -D -H -h /app harmony && \
+    mkdir -p /app/config  && \
+    chown -R harmony:harmony /app
 
-CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"]
-EXPOSE 80
+USER harmony
+
+COPY --chown=harmony --from=builder /app/bin/harmony /app
+
+WORKDIR /app
+
+CMD /harmony
