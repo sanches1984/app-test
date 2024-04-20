@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
+	log.Println("call hello")
 	fmt.Fprintf(w, "hello\n")
 }
 
@@ -18,9 +20,10 @@ func headers(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-
+	log.Println("run test app")
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
-
-	http.ListenAndServe(":8080", nil)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		log.Println("error serving", err)
+	}
 }
