@@ -6,5 +6,6 @@ const (
 	CommandDeleteReferral = "/delete_referral"
 	CommandGetReferrals   = "/get_referrals"
 
-	TextWelcome = "Welcome!"
+	TextWelcome     = "Welcome!"
+	TextNewReferral = "Please, provide the name of your company"
 )

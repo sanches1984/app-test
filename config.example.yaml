@@ -1,0 +1,8 @@
+---
+bot:
+  name: referral-bot
+  title: Referral Bot
+  token: aaa
+
+dbCredentials: db_credentials.json
+logLevel: 0

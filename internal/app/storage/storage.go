@@ -32,7 +32,16 @@ func New(ctx context.Context, filename string) (*Storage, func() error, error) {
 }
 
 func (s *Storage) AddReferral(ctx context.Context, rec *model.Referral) error {
-	_, _, err := s.db.Add(ctx, rec)
+	docs, err := s.db.Where("userId", "==", rec.UserID).Documents(ctx).GetAll()
+	if err != nil {
+		return err
+	}
+	if len(docs) == 0 {
+		_, _, err := s.db.Add(ctx, rec)
+		return err
+	}
+
+	_, err = s.db.Doc(docs[0].Ref.ID).Set(ctx, rec)
 	return err
 }
 
@@ -56,7 +65,20 @@ func (s *Storage) DeleteReferral(ctx context.Context, userID int64) error {
 	return nil
 }
 
-func (s *Storage) GetReferrals(ctx context.Context) error {
-	// todo
-	return nil
+func (s *Storage) GetReferrals(ctx context.Context) ([]*model.Referral, error) {
+	list := make([]*model.Referral, 0, 100)
+	iter := s.db.OrderBy("created", firestore.Desc).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+
+		list = append(list, model.NewReferral(doc.Data()))
+	}
+
+	return list, nil
 }
